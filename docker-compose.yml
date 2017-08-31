@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+  mongo_db:
+    container_name: mongo_db
+    image: mongodb:latest
+    restart: always
+    ports:
+    - "71072:27017"
+    environment:
+    - MONGO_INITDB_ROOT_USERNAME=root
+    - MONGO_INITDB_ROOT_PASSWORD=pa$$word
+    # - MONGO_INITDB_ROOT_USERNAME=${MONGO_USERNAME}
+    # - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD}
+
+  mongo_backup:
+    container_name: mongo_backup
+    build: ./mongo_backup
+    restart: always
+    links:
+    - mongodb
+    environment:
+    - MONGO_HOST=mongodb
+    - MONGO_PORT=71072
+    - MONGO_USERNAME=root
+    - MONGO_PASSWORD=pa$$word
+    - BCK_DATABASES=test,stage
+    - BCK_CRON=0 1,13 * * *
+    - GIT_REPO=github.com/twittwer/database-backup
+    - GIT_USERNAME=twittwer
+    - GIT_PASSWORD
