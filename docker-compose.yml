@@ -3,29 +3,32 @@ version: '3'
 services:
   mongo_db:
     container_name: mongo_db
-    image: mongodb:latest
-    restart: always
+    image: mongo:latest
+    # restart: always
     ports:
-    - "71072:27017"
+    - "27017:27017"
     environment:
     - MONGO_INITDB_ROOT_USERNAME=root
-    - MONGO_INITDB_ROOT_PASSWORD=pa$$word
+    - MONGO_INITDB_ROOT_PASSWORD=paxxword
     # - MONGO_INITDB_ROOT_USERNAME=${MONGO_USERNAME}
     # - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD}
+    volumes:
+    - ./mongo-seed/:/docker-entrypoint-initdb.d/
 
   mongo_backup:
     container_name: mongo_backup
-    build: ./mongo_backup
-    restart: always
+    build: ./mongo-backup
+    # restart: always
     links:
-    - mongodb
+    - mongo_db
     environment:
-    - MONGO_HOST=mongodb
-    - MONGO_PORT=71072
-    - MONGO_USERNAME=root
-    - MONGO_PASSWORD=pa$$word
-    - BCK_DATABASES=test,stage
-    - BCK_CRON=0 1,13 * * *
-    - GIT_REPO=github.com/twittwer/database-backup
-    - GIT_USERNAME=twittwer
-    - GIT_PASSWORD
+    - BCK2GIT_INSTANCE_NAME=test
+    - BCK2GIT_MONGO_HOST=mongo_db
+    - BCK2GIT_MONGO_PORT=27017
+    - BCK2GIT_MONGO_USERNAME=root
+    - BCK2GIT_MONGO_PASSWORD=paxxword
+    - BCK2GIT_SCHEDULE=*/1 * * * *
+    - BCK2GIT_GIT_URL=git@github.com:twittwer/database-backup.git
+    - BCK2GIT_GIT_NAME
+    volumes:
+    - ~/.ssh/id_rsa:/data/ssh_private_key
