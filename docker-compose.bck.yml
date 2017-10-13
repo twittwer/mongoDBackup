@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+  mongo_backup:
+    container_name: mongo_backup
+    build: ./mongo-backup
+    networks:
+      - db-tier
+    environment:
+      - BCK2GIT_INSTANCE_NAME=devServer01
+      - BCK2GIT_GIT_URL=${GIT_URL}
+      - BCK2GIT_SCHEDULE=*/1 * * * *
+      - BCK2GIT_LOGROTATE_SCHEDULE=*/1 * * * *
+      - BCK2GIT_MONGO_HOST=mongo_db
+      - BCK2GIT_MONGO_USERNAME=${MONGO_USERNAME}
+      - BCK2GIT_MONGO_PASSWORD=${MONGO_PASSWORD}
+    volumes:
+      - ~/.ssh/id_rsa:/data/ssh_private_key
+
+networks:
+  db-tier:
+    external: true

@@ -7,6 +7,10 @@ else
     INIT_CMD="show dbs\n"
 fi
 
-printf "$INIT_CMD" | mongo --host $BCK2GIT_MONGO_HOST --port $BCK2GIT_MONGO_PORT --username $BCK2GIT_MONGO_USERNAME --password $BCK2GIT_MONGO_PASSWORD  --authenticationDatabase admin --quiet
+if [ ! -z $BCK2GIT_MONGO_USERNAME ] && [ ! -z $BCK2GIT_MONGO_PASSWORD ]; then
+    AUTH="--username $BCK2GIT_MONGO_USERNAME --password $BCK2GIT_MONGO_PASSWORD  --authenticationDatabase $BCK2GIT_MONGO_AUTH_DB"
+fi
 
-mongo --host $BCK2GIT_MONGO_HOST --port $BCK2GIT_MONGO_PORT --username $BCK2GIT_MONGO_USERNAME --password $BCK2GIT_MONGO_PASSWORD  --authenticationDatabase admin --quiet
+printf "$INIT_CMD" | mongo --host $BCK2GIT_MONGO_HOST --port $BCK2GIT_MONGO_PORT $AUTH --quiet
+
+mongo --host $BCK2GIT_MONGO_HOST --port $BCK2GIT_MONGO_PORT $AUTH --quiet

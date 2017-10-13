@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+  mongo_db:
+    container_name: mongo_db
+    image: mongo:latest
+    expose:
+      - "27017"
+    networks:
+      - db-tier
+    volumes:
+      - ./mongo-seed/:/docker-entrypoint-initdb.d/
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD}
+
+networks:
+  db-tier:
+    external: true

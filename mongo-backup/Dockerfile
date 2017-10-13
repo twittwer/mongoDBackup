@@ -4,7 +4,7 @@ RUN apt-get update \
     && apt-get install -y git \
     && apt-get install -y cron
 
-ADD entrypoint.sh backup.sh restore.sh mongo.sh github_com /bck/
+ADD entrypoint.sh logrotate.sh backup.sh restore.sh mongo.sh github_com /bck/
 
 WORKDIR /bck
 
